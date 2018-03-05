@@ -2,6 +2,9 @@
 <html>
   <head>
     <title>Connect Four</title>
+    <!--[if lt IE 9]>
+    <script src="excanvas.js"></script>
+    <![endif]-->
     <link rel="stylesheet" type="text/css" href="styles/normalize.css">
     <link rel="stylesheet" type="text/css" href="styles/main.css">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -9,9 +12,13 @@
 
   <body>
     <div class="container">
-      <h1>Connect Four</h1>
-      <p>Welcome to the online version of Connect Four</p>
-      
+      <header>
+        <h1>Connect Four</h1>
+    </header>
+      <section>
+        <canvas id="canvas-content" width="700" height="600"></canvas>
+      </section>
     </div> <!--container-->
+    <script src="scripts/home.js"></script>
   </body>
 </html>
