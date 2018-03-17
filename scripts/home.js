@@ -5,43 +5,14 @@ var canvas_context = canvas.getContext("2d");
 //Flag for whose turn it is
 var playersTurn = 1;
 
-//Array representing columns
-var column1 = arrayCreator(50);
-var column2 = arrayCreator(150);
-var column3 = arrayCreator(250);
-var column4 = arrayCreator(350);
-var column5 = arrayCreator(450);
-var column6 = arrayCreator(550);
-var column7 = arrayCreator(650);
-
-//Creates arrays for columns
-function arrayCreator (numx){
-  var columnArray = [];
-  var yAxisx = 50;
-  for (var i = 0; i < 6; i++){
-    if(i === 0){
-      var object = {taken:0, xAxis:numx, yAxis:50};
-      columnArray.push(object);
-    } else {
-      var object2 = {taken:0, xAxis:numx, yAxis:0};
-      object2.yAxis = yAxisx+=100;
-      columnArray.push(object2);
-    }
-  }
-  return columnArray;
-};
-
-//Creates array for a row based on the columns
-function arrayRowCreator(rowNum){
-  rowArray=[];
-  rowArray.push(column1[rowNum]);
-  rowArray.push(column2[rowNum]);
-  rowArray.push(column3[rowNum]);
-  rowArray.push(column4[rowNum]);
-  rowArray.push(column5[rowNum]);
-  rowArray.push(column6[rowNum]);
-  return rowArray;
-}
+var boardArray = [
+  [{taken:0, xAxis:50, yAxis:50}, {taken:0, xAxis:150, yAxis:50}, {taken:0, xAxis:250, yAxis:50}, {taken:0, xAxis:350, yAxis:50}, {taken:0, xAxis:450, yAxis:50}, {taken:0, xAxis:550, yAxis:50}, {taken:0, xAxis:650, yAxis:50}],
+  [{taken:0, xAxis:50, yAxis:150}, {taken:0, xAxis:150, yAxis:150}, {taken:0, xAxis:250, yAxis:150}, {taken:0, xAxis:350, yAxis:150}, {taken:0, xAxis:450, yAxis:150}, {taken:0, xAxis:550, yAxis:150}, {taken:0, xAxis:650, yAxis:150}],
+  [{taken:0, xAxis:50, yAxis:250}, {taken:0, xAxis:150, yAxis:250}, {taken:0, xAxis:250, yAxis:250}, {taken:0, xAxis:350, yAxis:250}, {taken:0, xAxis:450, yAxis:250}, {taken:0, xAxis:550, yAxis:250}, {taken:0, xAxis:650, yAxis:250}],
+  [{taken:0, xAxis:50, yAxis:350}, {taken:0, xAxis:150, yAxis:350}, {taken:0, xAxis:250, yAxis:350}, {taken:0, xAxis:350, yAxis:350}, {taken:0, xAxis:450, yAxis:350}, {taken:0, xAxis:550, yAxis:350}, {taken:0, xAxis:650, yAxis:350}],
+  [{taken:0, xAxis:50, yAxis:450}, {taken:0, xAxis:150, yAxis:450}, {taken:0, xAxis:250, yAxis:450}, {taken:0, xAxis:350, yAxis:450}, {taken:0, xAxis:450, yAxis:450}, {taken:0, xAxis:550, yAxis:450}, {taken:0, xAxis:650, yAxis:450}],
+  [{taken:0, xAxis:50, yAxis:550}, {taken:0, xAxis:150, yAxis:550}, {taken:0, xAxis:250, yAxis:550}, {taken:0, xAxis:350, yAxis:550}, {taken:0, xAxis:450, yAxis:550}, {taken:0, xAxis:550, yAxis:550}, {taken:0, xAxis:650, yAxis:550}]
+]
 
 //Disc object constructor
 function Circle(x, y, player){
@@ -63,51 +34,76 @@ Circle.prototype = {
   addDisc: function(selectedCol){
     //Renders disc, assigns taken by player value, changes players turn.
     for(var i = 5; i >= 0; i--){
-      if (selectedCol[i].taken == 0 && playersTurn == 1) {
-        var newDisc = new Circle(selectedCol[i].xAxis, selectedCol[i].yAxis, 'black');
+      if(boardArray[i][selectedCol].taken == 0 && playersTurn == 1){
+        var newDisc = new Circle(boardArray[i][selectedCol].xAxis, boardArray[i][selectedCol].yAxis, 'black');
         newDisc.render();
-        selectedCol[i].taken = 1;
+        boardArray[i][selectedCol].taken = 1;
         playersTurn = 2;
-        var lastRowAddedTo = arrayRowCreator(i);
         break;
-      } else if (selectedCol[i].taken == 0 && playersTurn == 2) {
-        var newDisc = new Circle(selectedCol[i].xAxis, selectedCol[i].yAxis, 'red');
+      } else if (boardArray[i][selectedCol].taken == 0 && playersTurn == 2) {
+        var newDisc = new Circle(boardArray[i][selectedCol].xAxis, boardArray[i][selectedCol].yAxis, 'red');
         newDisc.render();
-        selectedCol[i].taken = 2;
+        boardArray[i][selectedCol].taken = 2;
         playersTurn = 1;
-        var lastRowAddedTo = arrayRowCreator(i);
         break;
       }
     }
+    checkForWinner(selectedCol);
+  }
+}
 
+function checkForWinner(selectedCol){
     //Check column for winner
     var countColMatch = 0;
-    for(var i=0; i < selectedCol.length - 1; i++){
-      if(selectedCol[i].taken == selectedCol[i+1].taken && selectedCol[i].taken!=0 && selectedCol[i+1].taken!=0){
+    for(var i=0; i < 5; i++){
+      if(boardArray[i][selectedCol].taken == boardArray[i+1][selectedCol].taken && boardArray[i][selectedCol].taken!=0 && boardArray[i+1][selectedCol].taken!=0){
         countColMatch+=1
         if(countColMatch == 3){
-          alert("Winner");
+          alert("Winner col");
         }
       } else {
         countColMatch=0;
       }
     }
-
     //Check row for winner
     var countRowMatch = 0;
-    for(var i=0; i < 7; i++){
-      if(lastRowAddedTo[i].taken == lastRowAddedTo[i+1].taken && lastRowAddedTo[i].taken!=0 && lastRowAddedTo[i+1].taken!=0){
-        countRowMatch+=1
-        if(countRowMatch == 3){
-          alert("Winner");
+    for(var i=0; i < 6; i++){
+      for(var x=0; x < 6; x++){
+        if(boardArray[i][x].taken == boardArray[i][x+1].taken && boardArray[i][x].taken!=0){
+          countRowMatch+=1
+          if(countRowMatch == 3){
+            alert("Winner row");
+          }
+        } else {
+          countRowMatch=0;
         }
-      } else {
-        countRowMatch = 0;
       }
     }
-  }
+  //Check diagonal for winner down
+    for(var row=0; row <= 2; row++){
+      for(var col=0; col < 3; col++){
+        if(boardArray[row][col].taken!=0 &&
+          boardArray[row][col].taken == boardArray[row+1][col+1].taken &&
+          boardArray[row][col].taken == boardArray[row+2][col+2].taken &&
+          boardArray[row][col].taken == boardArray[row+3][col+3].taken
+          ){
+            alert("Winner diag down");
+          }
+        }
+      }
+  //Check diagonal for winner up
+      for(var row=3; row <= 5; row++){
+        for(var col=0; col < 3; col++){
+          if(boardArray[row][col].taken!=0 &&
+            boardArray[row][col].taken == boardArray[row-1][col+1].taken &&
+            boardArray[row][col].taken == boardArray[row-2][col+2].taken &&
+            boardArray[row][col].taken == boardArray[row-3][col+3].taken
+            ){
+              alert("Winner diag up");
+            }
+          }
+        }
 }
-
 
 //Creates instance of a player disc
 var newDisc = new Circle(0, 0, 'black');
@@ -150,23 +146,23 @@ var colSixButton = document.getElementById("col-six-button");
 var colSevenButton = document.getElementById("col-seven-button");
 
 colOneButton.addEventListener("click", function() {
-  newDisc.addDisc(column1);
+  newDisc.addDisc(0);
 });
 colTwoButton.addEventListener("click", function() {
-  newDisc.addDisc(column2);
+  newDisc.addDisc(1);
 });
 colThreeButton.addEventListener("click", function() {
-  newDisc.addDisc(column3);
+  newDisc.addDisc(2);
 });
 colFourButton.addEventListener("click", function() {
-  newDisc.addDisc(column4);
+  newDisc.addDisc(3);
 });
 colFiveButton.addEventListener("click", function() {
-  newDisc.addDisc(column5);
+  newDisc.addDisc(4);
 });
 colSixButton.addEventListener("click", function() {
-  newDisc.addDisc(column6);
+  newDisc.addDisc(5);
 });
 colSevenButton.addEventListener("click", function() {
-  newDisc.addDisc(column7);
+  newDisc.addDisc(6);
 });
