@@ -60,6 +60,7 @@ function checkForWinner(selectedCol){
         countColMatch+=1
         if(countColMatch == 3){
           alert("Winner col");
+          break;
         }
       } else {
         countColMatch=0;
@@ -73,6 +74,7 @@ function checkForWinner(selectedCol){
           countRowMatch+=1
           if(countRowMatch == 3){
             alert("Winner row");
+            break;
           }
         } else {
           countRowMatch=0;
@@ -88,6 +90,7 @@ function checkForWinner(selectedCol){
           boardArray[row][col].taken == boardArray[row+3][col+3].taken
           ){
             alert("Winner diag down");
+            break;
           }
         }
       }
@@ -100,6 +103,7 @@ function checkForWinner(selectedCol){
             boardArray[row][col].taken == boardArray[row-3][col+3].taken
             ){
               alert("Winner diag up");
+              break;
             }
           }
         }
