@@ -35,7 +35,7 @@ Circle.prototype = {
     //Renders disc, assigns taken by player value, changes players turn.
     for(var i = 5; i >= 0; i--){
       if(boardArray[i][selectedCol].taken == 0 && playersTurn == 1){
-        var newDisc = new Circle(boardArray[i][selectedCol].xAxis, boardArray[i][selectedCol].yAxis, 'black');
+        var newDisc = new Circle(boardArray[i][selectedCol].xAxis, boardArray[i][selectedCol].yAxis, 'yellow');
         newDisc.render();
         boardArray[i][selectedCol].taken = 1;
         playersTurn = 2;
@@ -59,7 +59,7 @@ function checkForWinner(selectedCol){
       if(boardArray[i][selectedCol].taken == boardArray[i+1][selectedCol].taken && boardArray[i][selectedCol].taken!=0 && boardArray[i+1][selectedCol].taken!=0){
         countColMatch+=1
         if(countColMatch == 3){
-          alert("Winner col");
+          winnerAlert();
           break;
         }
       } else {
@@ -73,7 +73,7 @@ function checkForWinner(selectedCol){
         if(boardArray[i][x].taken == boardArray[i][x+1].taken && boardArray[i][x].taken!=0){
           countRowMatch+=1
           if(countRowMatch == 3){
-            alert("Winner row");
+            winnerAlert();
             break;
           }
         } else {
@@ -89,7 +89,7 @@ function checkForWinner(selectedCol){
           boardArray[row][col].taken == boardArray[row+2][col+2].taken &&
           boardArray[row][col].taken == boardArray[row+3][col+3].taken
           ){
-            alert("Winner diag down");
+            winnerAlert();;
             break;
           }
         }
@@ -102,7 +102,7 @@ function checkForWinner(selectedCol){
             boardArray[row][col].taken == boardArray[row-2][col+2].taken &&
             boardArray[row][col].taken == boardArray[row-3][col+3].taken
             ){
-              alert("Winner diag up");
+              winnerAlert();;
               break;
             }
           }
@@ -121,6 +121,7 @@ function renderCircle(){
 function Lines(xStartLine,yStartLine,xEndLine,yEndLine){
   canvas_context.beginPath();
   canvas_context.moveTo(xStartLine,yStartLine);
+  canvas_context.lineWidth= 2;
   canvas_context.lineTo(xEndLine,yEndLine);
   canvas_context.stroke();
 }
@@ -170,3 +171,23 @@ colSixButton.addEventListener("click", function() {
 colSevenButton.addEventListener("click", function() {
   newDisc.addDisc(6);
 });
+
+//modal
+var modal = document.getElementById('winnerModal');
+var winnerMessage = document.getElementById('modal-message');
+var span = document.getElementsByClassName("close")[0];
+
+//Open modal to alert there is a winner
+function winnerAlert(){
+  modal.style.display = "block";
+  if(playersTurn == 2){
+    winnerMessage.innerHTML = "Player One Wins";
+  } else {
+    winnerMessage.innerHTML = "Player Two Wins";
+  }
+}
+
+//Close modal when user clicks close and reset game.
+span.onclick = function(){
+  modal.style.display = "none";
+}
