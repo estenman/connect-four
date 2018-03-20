@@ -122,6 +122,7 @@ function Lines(xStartLine,yStartLine,xEndLine,yEndLine){
   canvas_context.beginPath();
   canvas_context.moveTo(xStartLine,yStartLine);
   canvas_context.lineWidth= 2;
+  canvas_context.strokeStyle= "#000000";
   canvas_context.lineTo(xEndLine,yEndLine);
   canvas_context.stroke();
 }
@@ -190,4 +191,12 @@ function winnerAlert(){
 //Close modal when user clicks close and reset game.
 span.onclick = function(){
   modal.style.display = "none";
+  playersTurn = 1;
+  for(var i=0; i < 6; i++){
+    for(var x=0; x < 6; x++){
+      boardArray[i][x].taken = 0;
+    }
+  }
+  canvas_context.clearRect(0, 0, canvas.width, canvas.height);
+  renderLines();
 }
